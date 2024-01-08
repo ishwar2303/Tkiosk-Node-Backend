@@ -35,14 +35,24 @@ const getLikedBy = async (tweet, _, context) => {
   return tweet.liked_by.map((user_id) => User.findById(user_id));
 };
 
-const getMyTweets_g = async (_, __, context) => {
+const getMyTweets_g = async (_, { first, after }, context) => {
   if (checkAuth(context)) {
-    const myTweets = await Tweet.find({ user_id: context.user.id });
-    if (!myTweets) {
-      throw new Error("cannot find any tweet");
-    }
+    const user = await User.findById(context.user.id);
+    if (user) {
 
-    return myTweets;
+      // Set the initial query conditions
+      const conditions = { user_id: user.id };
+      if (after) {
+        conditions._id = { $lt: new ObjectId(after) };
+      }
+
+      const tweets = await Tweet.find(conditions).sort({
+        createdAt: -1,
+      }).limit(first);
+      return tweets;
+    } else {
+      throw new Error("No user found");
+    }
   } else {
     throw new Error("User not authorized");
   }
@@ -236,13 +246,13 @@ const homeTimeline_g = async (_, { first, after }, context) => {
   }
 };
 
-const userTimeline_g = async (_, { first, after }, context) => {
+const userTimeline_g = async (_, { user_id, first, after }, context) => {
   if (checkAuth(context)) {
-    const user = await User.findById(context.user.id);
+    const user = await User.findById(user_id);
     if (user) {
 
       // Set the initial query conditions
-      const conditions = { user_id: user.id };
+      const conditions = { user_id: user_id };
       if (after) {
         conditions._id = { $lt: new ObjectId(after) };
       }

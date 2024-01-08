@@ -41,10 +41,10 @@ const typeDefs = `
     authenticate: Boolean
     getUserById(user_id: ID!): User
     getTweetById(tweet_id: ID!): Tweet
-    getMyTweets: [Tweet]
+    getMyTweets(first:Int, after: ID): [Tweet]
     checkUsername(username: String!): Boolean
     homeTimeline(first:Int, after: ID): [Tweet]
-    userTimeline(first:Int, after: ID): [Tweet]
+    userTimeline(user_id: ID!,first:Int, after: ID): [Tweet]
   }
 
   type Mutation {
