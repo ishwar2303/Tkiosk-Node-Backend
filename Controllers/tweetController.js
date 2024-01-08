@@ -1,6 +1,8 @@
 const expressAsyncHandler = require("express-async-handler");
 const Tweet = require("../Models/tweetModel");
 const User = require("../Models/userModel");
+const { default: mongoose } = require("mongoose");
+const { ObjectId } = require("mongoose").Types;
 
 const checkAuth = (context) => {
   const user = context.user;
@@ -210,15 +212,21 @@ const homeTimeline = expressAsyncHandler(async (req, res) => {
     .exec();
   res.status(200).json(tweets);
 });
+
 //resolver
-const homeTimeline_g = async (_, __, context) => {
+const homeTimeline_g = async (_, { first, after }, context) => {
   if (checkAuth(context)) {
     const user = await User.findById(context.user.id);
     if (user) {
       const { following } = user;
-      const tweets = await Tweet.find({ user_id: { $in: following } }).sort({
-        createdAt: -1,
-      });
+
+      // Set the initial query conditions
+      const conditions = { user_id: { $in: following } };
+      if (after) {
+        conditions._id = { $lt: new ObjectId(after) };
+      }
+      // Query for the tweets
+      const tweets = await Tweet.find(conditions).sort({ createdAt: -1 }).limit(first);
       return tweets;
     } else {
       throw new Error("No user found");
@@ -228,13 +236,20 @@ const homeTimeline_g = async (_, __, context) => {
   }
 };
 
-const userTimeline_g = async (_, { user_id }, context) => {
+const userTimeline_g = async (_, { first, after }, context) => {
   if (checkAuth(context)) {
-    const user = await User.findById(user_id);
+    const user = await User.findById(context.user.id);
     if (user) {
-      const tweets = await Tweet.find({ user_id: user_id }).sort({
+
+      // Set the initial query conditions
+      const conditions = { user_id: user.id };
+      if (after) {
+        conditions._id = { $lt: new ObjectId(after) };
+      }
+
+      const tweets = await Tweet.find(conditions).sort({
         createdAt: -1,
-      });
+      }).limit(first);
       return tweets;
     } else {
       throw new Error("No user found");
