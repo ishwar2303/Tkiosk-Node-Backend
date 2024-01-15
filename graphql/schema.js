@@ -25,6 +25,8 @@ const typeDefs = `
     tweet_text: String!
     liked_by: [User]
     comments: [Comment]
+    createdAt: String!
+
   }
 
   type Comment {
@@ -36,15 +38,20 @@ const typeDefs = `
     liked_by: [User]
   }
 
+  type PaginatedItems{
+    tweets: [Tweet],
+    endCursor: String!
+  }
+
   type Query {
     me: User
     authenticate: Boolean
     getUserById(user_id: ID!): User
     getTweetById(tweet_id: ID!): Tweet
-    getMyTweets(first:Int, after: ID): [Tweet]
+    getMyTweets(first:Int, after: ID): PaginatedItems!
     checkUsername(username: String!): Boolean
-    homeTimeline(first:Int, after: ID): [Tweet]
-    userTimeline(user_id: ID!,first:Int, after: ID): [Tweet]
+    homeTimeline(first:Int, after: ID): PaginatedItems!
+    userTimeline(user_id: ID!,first:Int, after: ID): PaginatedItems!
   }
 
   type Mutation {

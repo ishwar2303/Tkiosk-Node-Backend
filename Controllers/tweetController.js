@@ -49,7 +49,11 @@ const getMyTweets_g = async (_, { first, after }, context) => {
       const tweets = await Tweet.find(conditions).sort({
         createdAt: -1,
       }).limit(first);
-      return tweets;
+      const endCursor = tweets.length>0 ? tweets[tweets.length-1]._id :null;
+      return{
+        tweets: tweets,
+        endCursor: endCursor
+      }
     } else {
       throw new Error("No user found");
     }
@@ -237,7 +241,11 @@ const homeTimeline_g = async (_, { first, after }, context) => {
       }
       // Query for the tweets
       const tweets = await Tweet.find(conditions).sort({ createdAt: -1 }).limit(first);
-      return tweets;
+      const endCursor = tweets.length>0 ? tweets[tweets.length-1]._id :null;
+      return{
+        tweets: tweets,
+        endCursor: endCursor
+      } 
     } else {
       throw new Error("No user found");
     }
@@ -260,7 +268,11 @@ const userTimeline_g = async (_, { user_id, first, after }, context) => {
       const tweets = await Tweet.find(conditions).sort({
         createdAt: -1,
       }).limit(first);
-      return tweets;
+      const endCursor = tweets.length>0 ? tweets[tweets.length-1]._id :null;
+      return{
+        tweets: tweets,
+        endCursor: endCursor
+      } 
     } else {
       throw new Error("No user found");
     }
