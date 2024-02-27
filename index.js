@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 const { ApolloServer } = require("@apollo/server");
 const { expressMiddleware } = require("@apollo/server/express4");
 const app = express();
@@ -11,7 +12,6 @@ const typeDefs = require("./graphql/schema");
 const resolvers = require("./graphql/resolvers");
 const { contextMiddleware } = require("./middlewares/ValidateTokenHandler");
 
-require('dotenv').config();
 connectDB();
 
 //app.use(express.json(), cors(), bodyParser.json());
