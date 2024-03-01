@@ -24,7 +24,14 @@ const startServer = async () => {
   app.use(cors(), bodyParser.json());
 
   await server.start();
-
+  app.get(
+    "/",
+    (req, res) => {
+      res.send({
+        "Message": "Working Application Wohooooo!"
+      })
+    }
+  )
   app.use(
     "/graphql",
     expressMiddleware(server, {
