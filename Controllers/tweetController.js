@@ -241,7 +241,7 @@ const homeTimeline_g = async (_, { first, after }, context) => {
       }
       // Query for the tweets
       const tweets = await Tweet.find(conditions).sort({ createdAt: -1 }).limit(first);
-      const endCursor = tweets.length>0 ? tweets[tweets.length-1]._id :null;
+      const endCursor = tweets.length>0 ? tweets[tweets.length-1]._id : "END";
       return{
         tweets: tweets,
         endCursor: endCursor
