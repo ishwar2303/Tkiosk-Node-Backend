@@ -46,7 +46,7 @@ jobs:
         # Navigate to the workspace directory
         cd $GITHUB_WORKSPACE
 
-        cp ${{ steps.envFile.outputs.env_file }} .env
+        cp .env.qa .env
 
         # Zip the Node.js application code
         zip -r node-app-code.zip .
