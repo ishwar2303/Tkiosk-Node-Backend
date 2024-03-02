@@ -15,7 +15,6 @@ const resolvers = require("./graphql/resolvers");
 const { contextMiddleware } = require("./middlewares/ValidateTokenHandler");
 
 // connectDB();
-console.log('Running Version 12.0 -x-x-x-x-x-x-')
 
 //app.use(express.json(), cors(), bodyParser.json());
 const server = new ApolloServer({
@@ -32,9 +31,7 @@ const startServer = async () => {
     (req, res) => {
       res.send({
         "Message": "Working Application Wohooooo!",
-        "environment": process.env.ENVIRONMENT_TITLE,
-        "Pipeline": "Deployed through Github Actions :)",
-        "PipelineSetup": "DONE"
+        "GitHub_Actions": "This application is deployed using GitHub Actions Workflow :)"
       })
     }
   )

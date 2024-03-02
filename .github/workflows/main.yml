@@ -24,28 +24,28 @@ jobs:
     - name: Configure AWS region
       run: aws configure set region ${{ secrets.AWS_REGION }}
       
-    - name: Deploy to Elastic Beanstalk
+    - name: Configure AWS Credentials
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
-    - name: Upload application code to S3
+    - name: Upload application code to S3 Bucket
       run: |
         # Navigate to the workspace directory
         cd $GITHUB_WORKSPACE
 
         # Zip the Node.js application code
-        zip -r my-node-app-code.zip .
+        zip -r node-app-code.zip .
 
         # Upload the ZIP file to the specified S3 bucket
-        aws s3 cp my-node-app-code.zip s3://${{ secrets.AWS_S3_BUCKET }}/my-node-app-$(git rev-parse --short HEAD).zip
+        aws s3 cp node-app-code.zip s3://${{ secrets.AWS_S3_BUCKET }}/tkiosk-backend-app-$(git rev-parse --short HEAD).zip
 
     - name: Create new Elastic Beanstalk application version
       run: |
         aws elasticbeanstalk create-application-version \
           --application-name ${{ secrets.AWS_EB_APP_NAME }} \
           --version-label "$(git rev-parse --short HEAD)" \
-          --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=my-node-app-$(git rev-parse --short HEAD).zip
+          --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=tkiosk-backend-app-$(git rev-parse --short HEAD).zip
 
     - name: Deploy to Elastic Beanstalk
       run: |
@@ -53,11 +53,5 @@ jobs:
           --environment-id ${{ secrets.AWS_EB_ENV_ID }} \
           --version-label "$(git rev-parse --short HEAD)"
 
-
-    # - name: Deploy to Elastic Beanstalk
-    #   run: |
-    #     aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    #     aws elasticbeanstalk update-environment --environment-id e-sgmem2imph --version-label 13.0
 
   # Add more steps if needed, such as running tests, etc.
