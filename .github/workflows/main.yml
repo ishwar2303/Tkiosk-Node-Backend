@@ -31,32 +31,40 @@ jobs:
 
     - name: Determine Environment File
       id: envFile
-      run: echo "::set-output name=env_file::.env.${{ github.event_name == 'push' && github.event.ref == 'refs/heads/devtest' && 'qa' || 'prod' }}"
-
-    - name: Upload application code to S3 Bucket
       run: |
-        # Navigate to the workspace directory
-        cd $GITHUB_WORKSPACE
+        if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/devtest" ]; then
+          echo "Using .env.qa"
+          echo ".env.qa"
+        else
+          echo "Using .env.prod"
+          echo ".env.prod"
+        fi
+      shell: bash
 
-        # Zip the Node.js application code
-        zip -r node-app-code.zip .
+    # - name: Upload application code to S3 Bucket
+    #   run: |
+    #     # Navigate to the workspace directory
+    #     cd $GITHUB_WORKSPACE
 
-        # Upload the ZIP file to the specified S3 bucket
-        aws s3 cp node-app-code.zip s3://${{ secrets.AWS_S3_BUCKET }}/tkiosk-backend-app-$(git rev-parse --short HEAD).zip
+    #     # Zip the Node.js application code
+    #     zip -r node-app-code.zip .
 
-    - name: Create new Elastic Beanstalk application version
-      run: |
-        aws elasticbeanstalk create-application-version \
-          --application-name ${{ secrets.AWS_EB_APP_NAME }} \
-          --version-label "$(git rev-parse --short HEAD)" \
-          --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=tkiosk-backend-app-$(git rev-parse --short HEAD).zip
+    #     # Upload the ZIP file to the specified S3 bucket
+    #     aws s3 cp node-app-code.zip s3://${{ secrets.AWS_S3_BUCKET }}/tkiosk-backend-app-$(git rev-parse --short HEAD).zip
 
-    - name: Deploy to Elastic Beanstalk
-      run: |
-        cp ${{ steps.envFile.outputs.env_file }} .env
-        aws elasticbeanstalk update-environment \
-          --environment-id ${{ secrets.AWS_EB_ENV_ID }} \
-          --version-label "$(git rev-parse --short HEAD)"
+    # - name: Create new Elastic Beanstalk application version
+    #   run: |
+    #     aws elasticbeanstalk create-application-version \
+    #       --application-name ${{ secrets.AWS_EB_APP_NAME }} \
+    #       --version-label "$(git rev-parse --short HEAD)" \
+    #       --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=tkiosk-backend-app-$(git rev-parse --short HEAD).zip
+
+    # - name: Deploy to Elastic Beanstalk
+    #   run: |
+    #     cp ${{ steps.envFile.outputs.env_file }} .env
+    #     aws elasticbeanstalk update-environment \
+    #       --environment-id ${{ secrets.AWS_EB_ENV_ID }} \
+    #       --version-label "$(git rev-parse --short HEAD)"
 
 
   # Add more steps if needed, such as running tests, etc.
