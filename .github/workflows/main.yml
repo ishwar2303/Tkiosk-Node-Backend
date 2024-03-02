@@ -28,7 +28,11 @@ jobs:
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-    
+
+    - name: Determine Environment File
+      id: envFile
+      run: echo "::set-output name=env_file::.env.${{ github.event_name == 'push' && github.event.ref == 'refs/heads/devtest' && 'qa' || 'prod' }}"
+
     - name: Upload application code to S3 Bucket
       run: |
         # Navigate to the workspace directory
@@ -49,6 +53,7 @@ jobs:
 
     - name: Deploy to Elastic Beanstalk
       run: |
+        cp ${{ steps.envFile.outputs.env_file }} .env
         aws elasticbeanstalk update-environment \
           --environment-id ${{ secrets.AWS_EB_ENV_ID }} \
           --version-label "$(git rev-parse --short HEAD)"
