@@ -30,7 +30,7 @@ const startServer = async () => {
     "/",
     (req, res) => {
       res.send({
-        "Message": "Working Application Wohooooo!",
+        "Message": "Node JS Backend Application Running on EC2 AWS :)",
         "GitHub_Actions": "This application is deployed using GitHub Actions Workflow :)"
       })
     }
