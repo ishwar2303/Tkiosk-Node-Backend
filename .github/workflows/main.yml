@@ -28,6 +28,17 @@ jobs:
       run: |
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    
+    - name: Upload application code to S3
+      run: |
+        # Navigate to the workspace directory
+        cd $GITHUB_WORKSPACE
+
+        # Zip the Node.js application code
+        zip -r my-node-app-code.zip .
+
+        # Upload the ZIP file to the specified S3 bucket
+        aws s3 cp my-node-app-code.zip s3://${{ secrets.AWS_S3_BUCKET }}/my-node-app-$(git rev-parse --short HEAD).zip
 
     - name: Create new Elastic Beanstalk application version
       run: |
