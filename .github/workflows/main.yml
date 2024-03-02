@@ -29,9 +29,12 @@ jobs:
         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-    - name: Determine Environment File
+    - name: Determine Environment File and Update content of .env
       id: envFile
       run: |
+        # Navigate to the workspace directory
+        cd $GITHUB_WORKSPACE
+
         if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/devtest" ]; then
           echo "Using .env.qa"
           cp .env.qa .env
@@ -45,9 +48,7 @@ jobs:
       run: |
         # Navigate to the workspace directory
         cd $GITHUB_WORKSPACE
-
-        cp .env.qa .env
-
+        
         # Zip the Node.js application code
         zip -r node-app-code.zip .
 
