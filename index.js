@@ -29,7 +29,8 @@ const startServer = async () => {
       res.send({
         "Message": "Node JS Backend Application Running on EC2 AWS :)",
         "GitHub_Actions": "This application is deployed using GitHub Actions Workflow :)",
-        "Environment_Title": process.env.ENVIRONMENT_TITLE
+        "Environment_Title": process.env.ENVIRONMENT_TITLE,
+        "MongoDB_Connection_String_Secret_Key": process.env.MONGODB_CONNECTION_STRING
       })
     }
   )
