@@ -30,11 +30,17 @@ jobs:
         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Create new Elastic Beanstalk application version
-      run: eb create --label "$(git rev-parse --short HEAD)"
+      run: |
+        aws elasticbeanstalk create-application-version \
+          --application-name Your-Application-Name \
+          --version-label "$(git rev-parse --short HEAD)" \
+          --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=my-node-app-$(git rev-parse --short HEAD).zip
 
     - name: Deploy to Elastic Beanstalk
-      run: eb deploy
-
+      run: |
+        aws elasticbeanstalk update-environment \
+          --environment-id ${{ secrets.AWS_EB_ENV_ID }} \
+          --version-label "$(git rev-parse --short HEAD)"
 
 
     # - name: Deploy to Elastic Beanstalk
