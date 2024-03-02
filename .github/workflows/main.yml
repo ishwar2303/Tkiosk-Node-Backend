@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - devtest
+      - master
 
 jobs:
   deploy:
@@ -48,7 +49,7 @@ jobs:
       run: |
         # Navigate to the workspace directory
         cd $GITHUB_WORKSPACE
-        
+
         # Zip the Node.js application code
         zip -r node-app-code.zip .
 
