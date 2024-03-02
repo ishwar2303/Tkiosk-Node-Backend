@@ -34,10 +34,10 @@ jobs:
       run: |
         if [ "${{ github.event_name }}" == "push" ] && [ "${{ github.ref }}" == "refs/heads/devtest" ]; then
           echo "Using .env.qa"
-          echo ".env.qa"
+          cp .env.qa .env
         else
           echo "Using .env.prod"
-          echo ".env.prod"
+          cp .env.prod .env
         fi
       shell: bash
 
@@ -45,7 +45,7 @@ jobs:
       run: |
         # Navigate to the workspace directory
         cd $GITHUB_WORKSPACE
-        
+
         cp ${{ steps.envFile.outputs.env_file }} .env
 
         # Zip the Node.js application code
