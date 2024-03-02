@@ -33,7 +33,7 @@ const startServer = async () => {
       res.send({
         "Message": "Working Application Wohooooo!",
         "environment": process.env.ENVIRONMENT_TITLE,
-        "Pipeline": "Deployed through Github Actions"
+        "Pipeline": "Deployed through Github Actions :)"
       })
     }
   )
