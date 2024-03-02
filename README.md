@@ -21,7 +21,8 @@ Add inline-policy lets call it `deploy-backend-application-to-elasticbeanstalk`
 				"elasticbeanstalk:DescribeApplicationVersions",
 				"elasticbeanstalk:DescribeEnvironments",
 				"autoscaling:*",
-				"elasticbeanstalk:CreateApplicationVersion"
+				"elasticbeanstalk:CreateApplicationVersion",
+				"s3:*"
 			],
 			"Resource": "*"
 		},
