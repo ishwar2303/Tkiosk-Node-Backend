@@ -32,7 +32,7 @@ jobs:
     - name: Create new Elastic Beanstalk application version
       run: |
         aws elasticbeanstalk create-application-version \
-          --application-name {{ secrets.AWS_EB_APP_NAME }} \
+          --application-name ${{ secrets.AWS_EB_APP_NAME }} \
           --version-label "$(git rev-parse --short HEAD)" \
           --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=my-node-app-$(git rev-parse --short HEAD).zip
 
