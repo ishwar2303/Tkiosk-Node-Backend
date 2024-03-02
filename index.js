@@ -32,7 +32,8 @@ const startServer = async () => {
       res.send({
         "Message": "Node JS Backend Application Running on EC2 AWS :)",
         "GitHub_Actions": "This application is deployed using GitHub Actions Workflow :)",
-        "GitHub_Actions_Permission_Update_Check": "S3 permission added in inline policy instead of adding separately."
+        "GitHub_Actions_Permission_Update_Check": "S3 permission added in inline policy instead of adding separately.",
+        "LimitedS3Access": "Updated policy so github actions can only write to s3 bucket."
       })
     }
   )
