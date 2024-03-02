@@ -5,7 +5,9 @@ const { expressMiddleware } = require("@apollo/server/express4");
 const app = express();
 const errorHandler = require("./middlewares/ErrorHandler");
 const connectDB = require("./config/DBConnection");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv");
+const envFile = `.env.${process.env.NODE_ENV || 'qa'}`;
+dotenv.config({ path: envFile })
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const typeDefs = require("./graphql/schema");
@@ -29,7 +31,8 @@ const startServer = async () => {
     "/",
     (req, res) => {
       res.send({
-        "Message": "Working Application Wohooooo!"
+        "Message": "Working Application Wohooooo!",
+        "environment": process.env.ENVIRONMENT_TITLE
       })
     }
   )
