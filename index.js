@@ -15,7 +15,7 @@ const resolvers = require("./graphql/resolvers");
 const { contextMiddleware } = require("./middlewares/ValidateTokenHandler");
 
 // connectDB();
-console.log('Running Version 11.0 -x-x-x-x-x-x-')
+console.log('Running Version 12.0 -x-x-x-x-x-x-')
 
 //app.use(express.json(), cors(), bodyParser.json());
 const server = new ApolloServer({
