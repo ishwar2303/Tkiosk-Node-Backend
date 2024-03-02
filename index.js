@@ -40,7 +40,7 @@ const startServer = async () => {
     })
   );
 
-  const port = 8081;
+  const port = process.env.PORT ? process.env.PORT : 8081;
   app.listen(port, () => {
     console.log(`app listening on port ${port}`);
   });
